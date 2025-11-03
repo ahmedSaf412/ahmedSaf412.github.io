@@ -1481,25 +1481,32 @@ textarea.form-control {
         window.addEventListener('scroll', updateActiveNavLink);
         updateActiveNavLink(); // Initialize on load
 
-        // Smooth scrolling for navigation links
-        navLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const targetId = link.getAttribute('href').substring(1);
-                const targetSection = document.getElementById(targetId);
-                
-                if (targetSection) {
-                    const headerHeight = document.querySelector('.header').offsetHeight;
-                    const targetPosition = targetSection.offsetTop - headerHeight;
-                    
-                    window.scrollTo({
-                        top: targetPosition,
-                        behavior: 'smooth'
-                    });
-                }
-            });
-        });
+     // Smooth scrolling for navigation links
+navLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+        const href = link.getAttribute('href');
 
+        // Check if it's an internal anchor link
+        if (href.startsWith('#')) {
+            e.preventDefault(); // Only prevent default for internal links
+            const targetId = href.substring(1);
+            const targetSection = document.getElementById(targetId);
+
+            if (targetSection) {
+                const headerHeight = document.querySelector('.header').offsetHeight;
+                const targetPosition = targetSection.offsetTop - headerHeight;
+
+                window.scrollTo({
+                    top: targetPosition,
+                    behavior: 'smooth'
+                });
+            }
+        }
+        // For external links (like japanese.html),
+        // this code does nothing, and the browser
+        // will follow the link normally.
+    });
+});
         // Animate elements on scroll
         const animateOnScroll = () => {
             const elements = document.querySelectorAll('.card, .skill-category, .project-card');
@@ -1559,24 +1566,19 @@ textarea.form-control {
             console.log('Form submitted with data:', data);
         });
 
-        // Header background on scroll
+        // Header shadow on scroll
         const header = document.querySelector('.header');
-        let lastScrollTop = 0;
-
+              
         window.addEventListener('scroll', () => {
             const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-            
+        
+            // This version only controls the shadow and lets your
+            // CSS handle the background color (for dark mode).
             if (scrollTop > 100) {
-                header.style.background = 'rgba(255, 255, 253, 0.95)';
-                header.style.backdropFilter = 'blur(10px)';
                 header.style.boxShadow = 'var(--shadow-sm)';
             } else {
-                header.style.background = 'rgba(255, 255, 253, 0.95)';
-                header.style.backdropFilter = 'blur(10px)';
                 header.style.boxShadow = 'none';
             }
-            
-            lastScrollTop = scrollTop;
         });
 
         // Add typing effect to hero title
